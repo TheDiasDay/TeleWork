@@ -10,16 +10,16 @@ contract Employer {
         string position;
         string company;
         string description;
-        string[] skills;
+        string skills;
         string schedule;
         string workingHours;
         string location;
-        SharedStructs.Contact[] contacts;
+        string contacts;
     }
 
     mapping(address => Vacancy[]) public vacancies;
-    mapping(address => address[]) public jobSeekers; // Vacancy to JobSeeker mapping
-    mapping(address => address) public selectedJobSeekers; // Accepted job seekers
+    mapping(uint => address[]) public jobSeekers;
+    mapping(address => address) public selectedJobSeekers;
 
     event VacancyCreated(address indexed employer, Vacancy vacancy);
     event VacancyUpdated(address indexed employer, Vacancy vacancy);
@@ -68,32 +68,42 @@ contract Employer {
             _vacancyIndex < vacancies[msg.sender].length,
             "Invalid vacancy index"
         );
-        jobSeekers[msg.sender].push(_jobSeeker);
+        jobSeekers[_vacancyIndex].push(_jobSeeker);
         emit JobSeekerListed(msg.sender, _jobSeeker, _vacancyIndex);
     }
 
-    function getJobSeeker(
+    function getJobSeekers(
         uint _vacancyIndex
     ) public view returns (address[] memory) {
         require(
             _vacancyIndex < vacancies[msg.sender].length,
             "Invalid vacancy index"
         );
-        return jobSeekers[msg.sender];
+        return jobSeekers[_vacancyIndex];
     }
 
-    function acceptJobSeeker(address _jobSeeker) public {
+    function acceptJobSeeker(uint _vacancyIndex, address _jobSeeker) public {
+        require(
+            _vacancyIndex < vacancies[msg.sender].length,
+            "Invalid vacancy index"
+        );
         selectedJobSeekers[msg.sender] = _jobSeeker;
         emit JobSeekerAccepted(msg.sender, _jobSeeker);
     }
 
-    function declineJobSeeker(address _jobSeeker) public {
-        for (uint i = 0; i < jobSeekers[msg.sender].length; i++) {
-            if (jobSeekers[msg.sender][i] == _jobSeeker) {
-                for (uint j = i; j < jobSeekers[msg.sender].length - 1; j++) {
-                    jobSeekers[msg.sender][j] = jobSeekers[msg.sender][j + 1];
+    function declineJobSeeker(uint _vacancyIndex, address _jobSeeker) public {
+        require(
+            _vacancyIndex < vacancies[msg.sender].length,
+            "Invalid vacancy index"
+        );
+        address[] storage jobSeekerList = jobSeekers[_vacancyIndex];
+
+        for (uint i = 0; i < jobSeekerList.length; i++) {
+            if (jobSeekerList[i] == _jobSeeker) {
+                for (uint j = i; j < jobSeekerList.length - 1; j++) {
+                    jobSeekerList[j] = jobSeekerList[j + 1];
                 }
-                jobSeekers[msg.sender].pop();
+                jobSeekerList.pop();
                 break;
             }
         }

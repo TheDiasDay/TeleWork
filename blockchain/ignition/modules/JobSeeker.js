@@ -1,38 +1,20 @@
 const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
 
 module.exports = buildModule("JobSeekerModule", (m) => {
-    // Deploy the JobSeeker contract
     const jobSeeker = m.contract("JobSeeker");
 
-    // You can also configure specific default actions or initial setup
-    // For example, if you want to call `createCoverLetter` after deployment, you could define the CoverLetter
-
-    // Sample cover letter data for initial setup (optional)
     const coverLetter = {
-        id: "0x0000000000000000000000000000000000000000",  // Replace with a valid address
+        id: "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
         name: "John",
         surname: "Doe",
         middleName: "Middle",
         dateOfBirth: "1990-01-01",
-        education: [
-            {
-                name: "Sample University",
-                period: "2010-2014",
-                level: "Bachelor",
-                GPA: "3.5"
-            }
-        ],
-        contacts: [
-            {
-                name: "email",
-                value: "john.doe@example.com"
-            }
-        ],
-        skills: ["Solidity", "Blockchain", "Hardhat"]
+        education: "Nazarbayev University",
+        contacts: "john.doe@example.com",
+        skills: "Solidity, git, Redis, gRPC"
     };
 
-    // Call createCoverLetter as part of the deployment (optional)
-    m.call(jobSeeker, "createCoverLetter", [coverLetter], { from: "0xYourDeployerAddress" });
+    m.call(jobSeeker, "createCoverLetter", [coverLetter], { from: "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955" });
 
     return { jobSeeker };
 });
