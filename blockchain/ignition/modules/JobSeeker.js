@@ -3,8 +3,10 @@ const { buildModule } = require("@nomicfoundation/hardhat-ignition/modules");
 module.exports = buildModule("JobSeekerModule", (m) => {
     const jobSeeker = m.contract("JobSeeker");
 
+    const testAddr = "0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199";
+
     const coverLetter = {
-        id: "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
+        owner: testAddr,
         name: "John",
         surname: "Doe",
         middleName: "Middle",
@@ -14,7 +16,7 @@ module.exports = buildModule("JobSeekerModule", (m) => {
         skills: "Solidity, git, Redis, gRPC"
     };
 
-    m.call(jobSeeker, "createCoverLetter", [coverLetter], { from: "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955" });
+    m.call(jobSeeker, "createCoverLetter", [coverLetter], { from: testAddr });
 
     return { jobSeeker };
 });
