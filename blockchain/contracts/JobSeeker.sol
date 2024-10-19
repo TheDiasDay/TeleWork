@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.27;
+pragma solidity ^0.8.26;
 
 contract JobSeeker {
     struct CoverLetter {
-        address id;
+        address owner;
         string name;
         string surname;
         string middleName;
@@ -32,7 +32,7 @@ contract JobSeeker {
 
     function updateCoverLetter(CoverLetter memory _updatedCoverLetter) public {
         require(
-            coverLetters[msg.sender].id != address(0),
+            coverLetters[msg.sender].owner != address(0),
             "Cover letter does not exist"
         );
 
@@ -46,7 +46,7 @@ contract JobSeeker {
 
     function deleteCoverLetter() public {
         require(
-            coverLetters[msg.sender].id != address(0),
+            coverLetters[msg.sender].owner != address(0),
             "Cover letter does not exist"
         );
         delete coverLetters[msg.sender];
